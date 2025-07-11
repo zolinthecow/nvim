@@ -7,3 +7,7 @@ spell/
 lazy-lock.json
 
 **/.DS_Store
+
+# Claude Code hooks
+.claude/
+.agent-work/
