@@ -117,6 +117,16 @@ return { -- LSP Configuration & Plugins
       end,
     })
 
+    -- :BiomePath  → prints the Biome binary that the current buffer's client is using
+    vim.api.nvim_create_user_command('BiomePath', function()
+      local client = (vim.lsp.get_active_clients { name = 'biome' })[1]
+      if client and client.config and client.config.cmd then
+        print(client.config.cmd[1])
+      else
+        print 'Biome LSP is not attached to this buffer'
+      end
+    end, {})
+
     -- LSP servers and clients are able to communicate to each other what features they support.
     --  By default, Neovim doesn't support everything that is in the LSP specification.
     --  When you add nvim-cmp, luasnip, etc. Neovim now has *more* capabilities.
@@ -148,15 +158,6 @@ return { -- LSP Configuration & Plugins
         filetypes = { 'python' },
       },
       rust_analyzer = {},
-      -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
-      --
-      -- Some languages (like typescript) have entire language plugins that can be useful:
-      --    https://github.com/pmizio/typescript-tools.nvim
-      --
-      -- But for many setups, the LSP (`tsserver`) will work just fine
-      -- tsserver = {},
-      eslint = {},
-      biome = {},
       tailwindcss = {},
       ['prisma-language-server'] = {},
       lua_ls = {
@@ -189,7 +190,6 @@ return { -- LSP Configuration & Plugins
     vim.list_extend(ensure_installed, {
       'stylua', -- Used to format Lua code
       'black', -- Used to format Python code
-      'prettierd',
       'ocamlformat',
     })
     require('mason-tool-installer').setup { ensure_installed = ensure_installed }
@@ -204,6 +204,22 @@ return { -- LSP Configuration & Plugins
           server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
           require('lspconfig')[server_name].setup(server)
         end,
+      },
+    }
+
+    require('lspconfig').biome.setup {
+      cmd = { 'pnpm', 'exec', '--', 'biome', 'lsp-proxy' },
+      filetypes = {
+        'javascript',
+        'javascriptreact',
+        'typescript',
+        'typescriptreact',
+        'typescript.tsx',
+        'json',
+        'jsonc',
+        'astro',
+        'svelte',
+        'vue',
       },
     }
   end,

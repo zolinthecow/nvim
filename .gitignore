@@ -11,3 +11,6 @@ lazy-lock.json
 # Claude Code hooks
 .claude/
 .agent-work/
+
+# Claude Code hooks
+.nvim-claude/
