@@ -5,9 +5,6 @@ return {
     require('nvim-claude').setup {
       provider = {
         name = 'codex',
-        codex = {
-          spawn_command = 'codex --search --model=gpt-5-codex -c model_reasoning_effort="high" --sandbox workspace-write -c sandbox_workspace_write.network_access=true',
-        },
       },
     }
   end,
